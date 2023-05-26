@@ -22,6 +22,12 @@ module.exports = {
         'getir-green': '#76B900',
         'dark-grey': '#1A1A1A'
       },
+      // borderRadius: {
+      //   'full': '50%',
+      // },
+      backgroundImage: {
+        'instructor-pattern': "url('https://images.unsplash.com/photo-1537565609867-73c2edb961ac?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1489&q=80')",
+      },
       padding: {
         '128': '512px',   
       },

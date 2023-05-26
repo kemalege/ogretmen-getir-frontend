@@ -5,11 +5,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState, useEffect } from "react";
-import axios from "axios";
 import logo from "../assets/images/logo.svg";
 import logintexture from "../assets/images/logintexture.jpg";
 import { registerUser } from "../features/auth/authSlice";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useRegisterMutation } from "../features/auth/authApiSlice";
 
@@ -35,8 +34,10 @@ const Register = () => {
 
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
-  const navigate = useNavigate();
 
+  const [role, setRole] = useState("")
+  const navigate = useNavigate();
+  
   useEffect(() => {
     if (userRef.current) {
       userRef.current.focus();
@@ -65,6 +66,10 @@ const Register = () => {
   const [register, { isLoading }] = useRegisterMutation();
   const dispatch = useDispatch();
 
+  const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setRole(event.target.value)
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // if button enabled with JS hack
@@ -75,10 +80,10 @@ const Register = () => {
     //   return;
     // }
     try {
-      const userData = await register({ email: user, password: pwd }).unwrap(); // unwrap try-catch bloğu içinde kullanmamızı sağlar
+      const userData = await register({ email: user, password: pwd, role: role }).unwrap(); // unwrap try-catch bloğu içinde kullanmamızı sağlar
       // console.log(userData)
       dispatch(registerUser({ ...userData }));
-      navigate("/welcome");
+      navigate("/");
       setSuccess(true);
       //clear state and controlled inputs
       //need value attrib on inputs for this
@@ -250,6 +255,17 @@ const Register = () => {
                       Must match the first password input field.
                     </p>
                   </div>
+                  <div className="mb-3 -mx-2 flex items-end">
+                      <div className="px-2 w-1/2">
+                          <label className="text-gray-400 font-semibold text-sm mb-2">JOIN AS</label>
+                          <div>
+                              <select value={role} onChange={handleRoleChange} className="htmlForm-select text-gray-400 w-full py-2 mb-1 border-b border-gray-200 focus:outline-none focus:border-sky-600 transition-colors cursor-pointer">
+                                  <option value="student">Student</option>
+                                  <option value="instructor">Instructor</option>          
+                              </select>
+                          </div>
+                      </div> 
+                    </div>
                 </div>
                 <div className="mt-8 flex lg:flex-row justify-between items-center">
                   <button

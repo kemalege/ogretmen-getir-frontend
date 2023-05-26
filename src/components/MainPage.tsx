@@ -1,23 +1,31 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import Footer from "./Footer";
 
-import { Link, useLocation, Navigate, Outlet, useNavigate } from "react-router-dom"
+import { Link, useLocation, Navigate, Outlet, useNavigate, useSearchParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux";
 import { logOut, selectCurrentProfileImage, selectCurrentToken, selectCurrentUser } from "../features/auth/authSlice";
-import ProfileMenu from "./ProfileMenu";
-import Dashboard from "./Dashboard";
+import { useGetCourseBySearchQuery } from "../features/course/courseApiSlice";
 
 const MainPage = () => {
-
+  const navigate = useNavigate()
   const [searchText, setSearchText] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value);
 
-  const navigate = useNavigate()
+  const handleSearch = () => {
+    if (searchText && searchText.trim().length!==0) {
+      navigate(`courses?search=${searchText}`);
+    }
+  }
 
-  const dispatch = useDispatch();
-
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && searchText && searchText.trim().length!==0) {
+      navigate(`courses?search=${searchText}`);
+    }
+  };
   // const [showMenu, setShowMenu] = useState<boolean>(false);
 
   // const handleLogOut = async (e: React.MouseEvent<HTMLButtonElement>) => {  
@@ -31,15 +39,26 @@ const MainPage = () => {
   //   }
   // }
 
+
+  
   return (
     <section className="flex flex-col ">
-      <Dashboard/>
-      <header className="flex h-16 py-4 w-screen bg-getir-green justify-center items-center">
-        <div className="flex h-16 text-black space-x-8">
-            <button className="hover:bg-getir-green h-full hover:text-white">Home</button>
-            <button>Courses</button>
-            <button>Instructors</button>
-            <button>Contact</button>
+      
+      <header className="flex h-16 bg-getir-green justify-center">
+        <div className="flex text-black justify-center">
+          <div className="flex hover:bg-[#5e9100] hover:text-white items-center px-4">
+            <Link to="/" className="hover:text-white">Home</Link>
+          </div>
+          <div className="flex hover:bg-[#5e9100] hover:text-white items-center px-4">
+            <Link to="/courses" className="hover:text-white">Courses</Link>
+          </div>
+          <div className="flex hover:bg-[#5e9100] hover:text-white items-center px-4">
+            <Link to="/instructors" className="hover:text-white">Instructors</Link>
+          </div>
+          <div className="flex hover:bg-[#5e9100] hover:text-white items-center px-4">
+            <Link to="/" className="hover:text-white">Contact</Link>
+          </div>
+            
         </div>
       </header>
       <div className="flex relative">
@@ -48,12 +67,12 @@ const MainPage = () => {
           <h1 className="flex md:text-3xl lg:text-5xl text-white justify-center">Let Me Do It For You?</h1>
           <h3 className="flex md:text-xl lg:text-3xl text-white text-center my-4">This is the address of quality education in every field with experts in their fields.</h3>
           <div className="flex lg:mx-20">
-            <input type="text" id="search" value={searchText} onChange={handleSearchInput} placeholder="Search an activity" className="flex w-full py-3 pl-5 outline-none shadow-xl rounded-l-full"/>
-            <button className="flex rounded-r-full items-center justify-center w-16 bg-getir-green text-white shadow-xl"><FontAwesomeIcon icon={faMagnifyingGlass}/></button>
+            <input onKeyDown={handleKeyDown} type="text" id="search" value={searchText} onChange={handleSearchInput} placeholder="Search an activity" className="flex w-full py-3 pl-5 outline-none shadow-xl rounded-l-full"/>
+            <button onClick={handleSearch} className="flex rounded-r-full items-center justify-center w-16 bg-getir-green text-white shadow-xl"><FontAwesomeIcon icon={faMagnifyingGlass}/></button>
           </div>  
         </div>
         
-        <img className="object-cover w-screen h-128" src="https://res.cloudinary.com/djhvhao4u/image/upload/v1682635437/pexels-katerina-holmes-5905557_ucvqnl.jpg" alt=""/>
+        <img className="object-cover w-screen h-128" src="https://res.cloudinary.com/djhvhao4u/image/upload/v1684657397/page_images/search-box_ayoubz.jpg" alt=""/>
       </div>
       <div className="flex flex-col items-center">
         <div className="flex flex-col md:flex-row my-8">
@@ -62,28 +81,28 @@ const MainPage = () => {
         </div>
         <div className="flex flex-wrap lg:flex-nowrap justify-center">
           <div className="flex lg:flex-col shadow-lg rounded-t m-2 basis-3/4 md:basis-2/5 lg:basis-1/4">
-            <img className="object-cover w-fit lg:w-56 h-28 rounded-t" src="https://res.cloudinary.com/djhvhao4u/image/upload/v1682672669/pexels-anastasiya-gepp-1462630_gmz8hl.jpg" alt=""/>
+            <img className="object-cover w-fit lg:w-56 h-28 rounded-t" src="https://res.cloudinary.com/djhvhao4u/image/upload/v1684657397/page_images/school-support_qrowjs.jpg" alt=""/>
             <div className="my-2 mx-2">
               <h5 className="text-getir-green">School Support</h5>
               <p className="text-sm text-gray-500">45345 teachers</p> 
             </div>
           </div>
           <div className="flex lg:flex-col shadow-lg rounded-t m-2 basis-3/4 md:basis-2/5 lg:basis-1/4">
-            <img className="object-cover w-fit lg:w-56 h-28 rounded-t" src="https://res.cloudinary.com/djhvhao4u/image/upload/v1682672715/pexels-rodnae-productions-7502201_qxn6rh.jpg" alt=""/>
+            <img className="object-cover w-fit lg:w-56 h-28 rounded-t" src="https://res.cloudinary.com/djhvhao4u/image/upload/v1684657396/page_images/music-lessons_ogfcbj.jpg" alt=""/>
             <div className="my-2 mx-2">
               <h5 className="text-getir-green">Music Lessons</h5>
               <p className="text-sm text-gray-500">45345 teachers</p> 
             </div>
           </div>
           <div className="flex lg:flex-col shadow-lg rounded-t m-2 basis-3/4 md:basis-2/5 lg:basis-1/4">
-            <img className="object-cover w-fit lg:w-56 h-28 rounded-t" src="https://res.cloudinary.com/djhvhao4u/image/upload/v1682672759/pexels-darya-sannikova-2927599_sxxl9t.jpg" alt=""/>
+            <img className="object-cover w-fit lg:w-56 h-28 rounded-t" src="https://res.cloudinary.com/djhvhao4u/image/upload/v1684657397/page_images/language-lessons_msgxts.jpg" alt=""/>
             <div className="my-2 mx-2">
               <h5 className="text-getir-green">Language Lessons</h5>
               <p className="text-sm text-gray-500">45345 teachers</p> 
             </div>
           </div>
           <div className="flex lg:flex-col shadow-lg rounded-t m-2 basis-3/4 md:basis-2/5 lg:basis-1/4">
-            <img className="object-cover w-fit lg:w-56 h-28 rounded-t" src="https://res.cloudinary.com/djhvhao4u/image/upload/v1682672688/pexels-katerina-holmes-5905709_sb2m3v.jpg" alt=""/>
+            <img className="object-cover w-fit lg:w-56 h-28 rounded-t" src="https://res.cloudinary.com/djhvhao4u/image/upload/v1684657398/page_images/online_lessons_zcidrj.jpg" alt=""/>
             <div className="my-2 mx-2">
               <h5 className="text-getir-green">Online Lessons</h5>
               <p className="text-sm text-gray-500">45345 teachers</p> 

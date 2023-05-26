@@ -23,7 +23,10 @@ const ProfilePanel = () => {
       <div className="flex-col bg-gray-100 md:min-h-screen md:min-w-[14rem] lg:min-w-[14rem]"> 
       <Link to={from} className="flex m-4 hover:text-getir-green"><FontAwesomeIcon icon={faChevronLeft}/></Link>
         <div className="flex items-center flex-col my-4">
-            <img className="h-20 rounded-full" src={avatar || defAvatar} alt="" />
+          <div className="">
+            <img className="h-36 w-36 rounded-full object-cover object-[59%_-4px]" src={avatar || defAvatar} alt="" />
+          </div>
+            
             <p className="text-center">{currentUser}</p>
         </div>
         <ul className="flex flex-row md:flex-col lg:flex-col py-4">

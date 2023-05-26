@@ -1,13 +1,13 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import {
-  Error,
   useEditProfileMutation,
   useGetToProfileQuery,
 } from "../features/auth/authApiSlice";
-import { IUser } from "../features/types/userTypes";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { logOut, setCredentials } from "../features/auth/authSlice";
+import { UserData } from "../features/types/userTypes";
+import { useLocation, useNavigate } from "react-router-dom";
+import { logOut } from "../features/auth/authSlice";
 import { useDispatch } from "react-redux";
+import { toast } from "react-hot-toast";
 
 const EditProfile = () => {
   const { data: userInfo, refetch } = useGetToProfileQuery();
@@ -16,7 +16,7 @@ const EditProfile = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const [user, setUser] = useState<IUser>({
+  const [user, setUser] = useState<UserData>({
     _id: "",
     name: "",
     surname: "",
@@ -25,6 +25,8 @@ const EditProfile = () => {
     role: "",
     about: "",
     department: "",
+    blocked: false,
+    title: "",
     webSite: "",
     profile_image: {
       public_id: "",
@@ -51,7 +53,7 @@ const EditProfile = () => {
       }
     }
   }
-
+  
   useEffect(() => {
     handleRefetchData()
   },[user])
@@ -69,7 +71,7 @@ const EditProfile = () => {
     e.preventDefault();
     try {
       const payload = await editProfile(user).unwrap();
-      console.log(payload);
+      toast.success('Profile succesfully updated')
     } catch (err: any) {
       if (err?.status === 401) {
         dispatch(logOut());

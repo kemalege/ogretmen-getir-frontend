@@ -1,11 +1,11 @@
 import { apiSlice } from "../../app/api/apiSlice";
-import { IUser } from "../types/userTypes";
+import { IUser, IUserDetails } from "../types/userTypes";
 
-export interface IProfile {
-    success: boolean;
-    data: IUser; 
-}
-export interface Error {
+// export interface IProfile {
+//     success: boolean;
+//     data: IUser; 
+// }
+export interface IError {
     data:{
         success: boolean;
         message: string;
@@ -36,11 +36,11 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             })
         }),
-        getToProfile: builder.query<IProfile, void>({
+        getToProfile: builder.query<IUserDetails, void>({
             query: () => ({
                url: '/auth/profile',
                method: 'GET',
-               keepUnusedDataFor: 5
+               keepUnusedDataFor: 10
            })
        }),
        editProfile: builder.mutation({
